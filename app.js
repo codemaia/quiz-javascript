@@ -1,5 +1,4 @@
-
-const correctAnswer = ['C', 'C', 'C', 'C'];
+const correctAnswer = ['C', 'D', 'C', 'B'];
 
 const form = document.querySelector('form');
 const pEn = document.querySelectorAll('#enus');
@@ -8,9 +7,10 @@ const labelEn = document.querySelector('.translate-en');
 const labelPt = document.querySelector('.translate-pt');
 const popup = document.querySelector('.popup-wrapper');
 const popupContent = document.querySelector('.popup-content');
+let idSetInterval;
 
 
-
+// NEED REFATORING
 labelEn.addEventListener('click', () => {
 
     //maybe function
@@ -40,7 +40,6 @@ labelPt.addEventListener('click', () => {
 
 
 
-
 form.addEventListener('submit', event => {
     event.preventDefault();
 
@@ -66,6 +65,7 @@ form.addEventListener('submit', event => {
 
     });
 
+    let count = 0;    
     //vai virar function kk 
     if (scoreUser === 0) {
 
@@ -74,31 +74,69 @@ form.addEventListener('submit', event => {
        popupContentParagraphEn.textContent = `Your score is 0 :(`;
 
     } else if (scoreUser === 25) {
-
         popup.classList.remove('hidden');
-        popupContentParagraphPt.textContent = `Boa, ${scoreUser}% do quiz! mas da pra melhorar!`
-        popupContentParagraphEn.textContent = `Nice, your score is ${scoreUser}% of the quiz!`
+
+        idSetInterval = setInterval(() => {
+
+            if(scoreUser === count) {
+                clearInterval(idSetInterval);
+            }
+
+            popupContentParagraphPt.textContent = `Boa, ${count}% do quiz! mas da pra melhorar!`;
+            popupContentParagraphEn.textContent = `Nice, your score is ${count}% of the quiz!`;
+
+            count++;
+
+        }, 10);
+
+        
 
     } else if (scoreUser === 50) {
 
         popup.classList.remove('hidden');
-        popupContentParagraphPt.textContent = `Muito bom, ${scoreUser}% do quiz! Vamo que da pra fechar o quiz!`
-        popupContentParagraphEn.textContent = `Very good, your score is ${scoreUser}% of the quiz!`
+
+        idSetInterval = setInterval(() => {
+            if (scoreUser === count) {
+                clearInterval(idSetInterval);
+            }
+
+            popupContentParagraphPt.textContent = `Muito bom, ${count}% do quiz! Vamo que da pra fechar o quiz!`
+            popupContentParagraphEn.textContent = `Very good, your score is ${count}% of the quiz!`
+            count++
+        }, 10)
 
     } else if (scoreUser === 75) {
 
         popup.classList.remove('hidden');
-        popupContentParagraphPt.textContent = `Show, acertou ${scoreUser}%! Quase perfeito hein?! Vamo acertar tudo agora?`
-        popupContentParagraphEn.textContent = `Good job! Your score is ${scoreUser}% of the quiz!`
+
+        idSetInterval = setInterval(() => {
+
+            if (scoreUser === count) {
+                clearInterval(idSetInterval);
+            }
+            popupContentParagraphPt.textContent = `Show, acertou ${count}%! Quase perfeito hein?! Vamo acertar tudo agora?`
+            popupContentParagraphEn.textContent = `Good job! Your score is ${count}% of the quiz!`
+            count++
+        }, 10)
 
     } else {
 
         popup.classList.remove('hidden');
-        popupContentParagraphPt.textContent = `Perfeito! você acertou ${scoreUser}% do quiz`
-        popupContentParagraphEn.textContent = `Perfect! ${scoreUser}% of the quiz`
+
+        idSetInterval = setInterval(() => {
+            
+            if (scoreUser === count) {
+                clearInterval(idSetInterval);
+            }
+
+            popupContentParagraphPt.textContent = `Perfeito! você acertou ${count}% do quiz`
+            popupContentParagraphEn.textContent = `Perfect! ${count}% of the quiz`
+            count++
+        }, 10);
 
     };
 
+    scrollTo(0,0);
 });
 
 
@@ -114,4 +152,4 @@ popup.addEventListener('click', event => {
 
     document.location.reload(true);
     
-})
+});
