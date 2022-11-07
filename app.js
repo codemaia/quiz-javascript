@@ -10,44 +10,60 @@ const popupContent = document.querySelector('.popup-content');
 let idSetInterval;
 
 
-// NEED REFATORING
-labelEn.addEventListener('click', () => {
+//functions
+const removeClasses = (element, className) => {
+    element.classList.remove(className);
+};
+
+
+const translateForEnglish = () => {
 
     //maybe function
      pEn.forEach(p => {
-        p.classList.remove('hidden');
+        removeClasses(p, 'hidden')
     });
 
     pPt.forEach(p => {
         p.classList.add('hidden');
     });
     
-});
+};
 
 
-labelPt.addEventListener('click', () => {
+const translateForPortuguese = () => {
 
     //maybe function
     pPt.forEach(p => {
-        p.classList.remove('hidden');
+        removeClasses(p, 'hidden');
     });
 
     pEn.forEach(p => {
         p.classList.add('hidden');
     });
 
-});
+};
 
 
+const closeThePopup = event => {
 
-form.addEventListener('submit', event => {
-    event.preventDefault();
+    const getClassClicked = event.target.classList[0];
 
+    if (getClassClicked !== null) {
+        popup.classList.add('hidden');
+    }
 
-    const popupContentParagraphPt = popupContent.childNodes[3];
-    const popupContentParagraphEn = popupContent.childNodes[5];
-
+    document.location.reload(true);
     
+};
+
+
+const printResult = (paragrah, msg) => {
+    paragrah.textContent = msg;
+};
+
+
+
+const resultAnswers = () => {
     let scoreUser = 0;
 
     const answerUser = [
@@ -65,91 +81,113 @@ form.addEventListener('submit', event => {
 
     });
 
+    return scoreUser;
+};
+
+
+
+const logicOfQuiz = event => {
+    event.preventDefault();
+    
+    resultAnswers();
+
+
+    const popupContentParagraphPt = popupContent.childNodes[3];
+    const popupContentParagraphEn = popupContent.childNodes[5];
     let count = 0;    
-    //vai virar function kk 
-    if (scoreUser === 0) {
 
-       popup.classList.remove('hidden');
-       popupContentParagraphPt.textContent = `Calma jovem, tenta de novo <3! Você não acertou nenhuma alternativa, mas não significa nada! =)`
-       popupContentParagraphEn.textContent = `Your score is 0 :(`;
+    
+    if (resultAnswers() === 0) {
+        
+       removeClasses(popup, 'hidden');
+       printResult(popupContentParagraphPt, `Calma jovem, tenta de novo <3! Você não acertou nenhuma alternativa, mas não significa nada! =)`)
+       printResult(popupContentParagraphEn, `Your score is 0 :(`); 
+    
 
-    } else if (scoreUser === 25) {
-        popup.classList.remove('hidden');
+    } else if (resultAnswers() === 25) {
+        
+        removeClasses(popup, 'hidden');
 
         idSetInterval = setInterval(() => {
 
-            if(scoreUser === count) {
+            if(resultAnswers() === count) {
                 clearInterval(idSetInterval);
             }
 
-            popupContentParagraphPt.textContent = `Boa, ${count}% do quiz! mas da pra melhorar!`;
-            popupContentParagraphEn.textContent = `Nice, your score is ${count}% of the quiz!`;
+            printResult(popupContentParagraphPt, `Boa, ${count}% do quiz! mas da pra melhorar!`);
+            printResult(popupContentParagraphEn, `Nice, your score is ${count}% of the quiz!`);
 
             count++;
 
         }, 10);
 
+
+    } else if (resultAnswers() === 50) {
+
+        removeClasses(popup, 'hidden')
+
+        idSetInterval = setInterval(() => {
+
+            if (resultAnswers() === count) {
+                clearInterval(idSetInterval);
+            }
+
+            printResult(popupContentParagraphPt, `Muito bom, ${count}% do quiz! Vamo que da pra fechar o quiz!`);
+            printResult(popupContentParagraphEn, `Very good, your score is ${count}% of the quiz!`);
+
+            count++
+
+        }, 10);
+
+    } else if (resultAnswers() === 75) {
+
+        removeClasses(popup, 'hidden');
         
-
-    } else if (scoreUser === 50) {
-
-        popup.classList.remove('hidden');
-
         idSetInterval = setInterval(() => {
-            if (scoreUser === count) {
+
+            if (resultAnswers() === count) {
                 clearInterval(idSetInterval);
             }
 
-            popupContentParagraphPt.textContent = `Muito bom, ${count}% do quiz! Vamo que da pra fechar o quiz!`
-            popupContentParagraphEn.textContent = `Very good, your score is ${count}% of the quiz!`
+            printResult(popupContentParagraphPt, `Show, acertou ${count}%! Quase perfeito hein?! Vamo acertar tudo agora?`);
+            printResult(popupContentParagraphEn, `Good job! Your score is ${count}% of the quiz!`);
+
             count++
-        }, 10)
 
-    } else if (scoreUser === 75) {
-
-        popup.classList.remove('hidden');
-
-        idSetInterval = setInterval(() => {
-
-            if (scoreUser === count) {
-                clearInterval(idSetInterval);
-            }
-            popupContentParagraphPt.textContent = `Show, acertou ${count}%! Quase perfeito hein?! Vamo acertar tudo agora?`
-            popupContentParagraphEn.textContent = `Good job! Your score is ${count}% of the quiz!`
-            count++
-        }, 10)
+        }, 10);
 
     } else {
 
-        popup.classList.remove('hidden');
+        removeClasses(popup, 'hidden');
 
         idSetInterval = setInterval(() => {
             
-            if (scoreUser === count) {
+            if (resultAnswers() === count) {
                 clearInterval(idSetInterval);
             }
+            
+            printResult(popupContentParagraphPt, `Perfeito! você acertou ${count}% do quiz`);
+            printResult(popupContentParagraphEn, `Perfect! ${count}% of the quiz`);
 
-            popupContentParagraphPt.textContent = `Perfeito! você acertou ${count}% do quiz`
-            popupContentParagraphEn.textContent = `Perfect! ${count}% of the quiz`
             count++
+
         }, 10);
 
     };
 
     scrollTo(0,0);
-});
+};
 
 
 
-/** Fechar popup */
-popup.addEventListener('click', event => {
+// refactored
+labelEn.addEventListener('click', translateForEnglish);
 
-    const getClassClicked = event.target.classList[0];
+labelPt.addEventListener('click', translateForPortuguese);
 
-    if (getClassClicked !== null) {
-        popup.classList.add('hidden');
-    }
+form.addEventListener('submit', logicOfQuiz);
 
-    document.location.reload(true);
-    
-});
+
+
+/** close popup */
+popup.addEventListener('click', closeThePopup);
